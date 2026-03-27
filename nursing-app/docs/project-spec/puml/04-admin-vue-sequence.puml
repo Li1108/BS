@@ -1,0 +1,28 @@
+@startuml
+!theme plain
+skinparam dpi 180
+
+title 图4 管理后台登录与鉴权时序图
+
+actor 管理员 as Admin
+participant "LoginView" as V
+participant "UserStore" as S
+participant "request.js" as R
+participant "Backend /admin/auth/login" as B
+participant "Backend /auth/me" as M
+
+Admin -> V : 输入手机+密码
+V -> S : login(form)
+S -> R : POST /admin/auth/login
+R -> B : HTTP请求
+B --> R : token + userId + role
+R --> S : code==0
+S -> S : 校验 role==ADMIN_SUPER
+S -> S : setToken + setUserInfo
+S -> R : GET /auth/me
+R -> M : HTTP请求(Authorization)
+M --> R : user profile
+R --> S : profile
+S --> V : 登录成功
+
+@enduml

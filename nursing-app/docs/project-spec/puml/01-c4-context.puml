@@ -1,0 +1,39 @@
+@startuml
+!theme plain
+skinparam dpi 180
+skinparam shadowing false
+skinparam packageStyle rectangle
+
+title 图1 C4-Context 互联网+护理服务平台上下文图
+
+actor "C端用户" as User
+actor "护士" as Nurse
+actor "平台运营/管理员" as Admin
+
+rectangle "互联网+护理服务平台\n(System: Nursing-App)" as System {
+  rectangle "移动端 App\nFlutter" as App
+  rectangle "管理后台\nVue3" as AdminWeb
+  rectangle "后端服务\nSpring Boot" as Api
+}
+
+cloud "阿里云短信服务" as Sms
+cloud "阿里云移动推送" as Push
+cloud "支付宝沙箱/支付网关" as Alipay
+cloud "高德地图开放平台" as Amap
+cloud "RabbitMQ" as MQ
+database "MySQL 8" as Db
+
+User --> App : 下单、支付、评价
+Nurse --> App : 接单、服务、提现
+Admin --> AdminWeb : 审核、调度、运营
+
+App --> Api : REST/JSON + JWT
+AdminWeb --> Api : REST/JSON + JWT
+Api --> Db : 业务数据读写
+Api --> MQ : 异步消息
+Api --> Sms : 验证码发送
+Api --> Push : 通知下发
+Api --> Alipay : 支付/退款
+Api --> Amap : 地理编码/路径
+
+@enduml

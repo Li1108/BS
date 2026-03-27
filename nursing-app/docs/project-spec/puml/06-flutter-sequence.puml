@@ -1,0 +1,29 @@
+@startuml
+!theme plain
+skinparam dpi 180
+
+title 图6 Flutter 下单到支付时序图
+
+actor 用户 as U
+participant "ServiceListPage" as P1
+participant "OrderRepository/HTTP" as Net
+participant "Backend /order/create" as C
+participant "PaymentPage" as Pay
+participant "Backend /payment/pay" as BPay
+participant "Alipay" as Ali
+
+U -> P1 : 选择服务并填写预约信息
+P1 -> Net : POST /order/create
+Net -> C : createOrder
+C --> Net : orderNo + amount
+Net --> P1 : 创建成功
+
+U -> Pay : 点击立即支付
+Pay -> Net : POST /payment/pay
+Net -> BPay : payOrder
+BPay -> Ali : createAppPayOrder
+Ali --> BPay : payInfo
+BPay --> Net : payInfo
+Net --> Pay : 拉起支付宝
+
+@enduml

@@ -1,0 +1,85 @@
+# =========================
+# OS / General
+# =========================
+.DS_Store
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.swp
+*.swo
+*~
+
+# =========================
+# IDE / Editor
+# =========================
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# =========================
+# Logs / Temp / Runtime
+# =========================
+*.log
+logs/
+*.pid
+*.pid.lock
+*.tmp
+*.temp
+*.cache
+
+# =========================
+# Archives / Media Binaries
+# =========================
+*.zip
+*.tar
+*.gz
+*.7z
+*.rar
+*.mp4
+*.mov
+*.avi
+*.mkv
+
+# =========================
+# Java / Spring Boot / Maven
+# =========================
+**/target/
+**/.mvn/wrapper/maven-wrapper.jar
+
+# =========================
+# Node.js / Vue / Vite
+# =========================
+**/node_modules/
+**/dist/
+**/.npm/
+**/.pnpm-store/
+**/.yarn/
+**/.yarn-cache/
+**/.eslintcache
+
+# =========================
+# Android / Gradle / Flutter / Dart
+# =========================
+**/.gradle/
+**/build/
+**/.dart_tool/
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+**/.packages
+**/.metadata
+**/android/local.properties
+**/android/key.properties
+
+# Generated platform plugin registrants
+**/linux/flutter/generated_plugin_registrant.*
+**/macos/Flutter/GeneratedPluginRegistrant.*
+**/windows/flutter/generated_plugin_registrant.*
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/flutter_export_environment.sh
+
+# Test / coverage outputs
+**/coverage/
+**/test-output/
+**/reports/

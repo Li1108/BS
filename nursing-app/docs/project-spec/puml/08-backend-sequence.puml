@@ -1,0 +1,31 @@
+@startuml
+!theme plain
+skinparam dpi 180
+
+title 图8 后端订单创建与自动派单时序图
+
+actor 用户 as U
+participant "OrderController" as C
+participant "OrderService" as S
+participant "OrdersMapper" as O
+participant "OrderStatusLogMapper" as L
+participant "NotificationMapper" as N
+participant "OrderScheduledTask" as T
+participant "RabbitMQ" as MQ
+
+U -> C : POST /order/create
+C -> S : createOrder(userId, req)
+S -> O : insert(order)
+S -> L : insert(status=待支付)
+S -> N : insert(订单创建通知)
+S --> C : OrderVO
+C --> U : Result<OrderVO>
+
+... 支付成功后进入待接单 ...
+T -> O : 扫描待接单订单
+T -> T : 距离/状态/拒单阈值过滤
+T -> O : 更新护士指派
+T -> L : insert(status变更)
+T -> MQ : 发布推送事件
+
+@enduml

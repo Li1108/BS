@@ -1,0 +1,274 @@
+# ==========================================
+# 互联网+护理服务APP - Spring Boot 配置
+# ==========================================
+
+server:
+  port: 8081
+  servlet:
+    context-path: /api/v1
+
+spring:
+  application:
+    name: nursing-service
+
+  # ==================== 数据库配置 ====================
+  datasource:
+    url: ${DB_URL:jdbc:mysql://127.0.0.1:3306/nursing_service_db?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:1108}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    druid:
+      # 获取连接等待超时时间
+      max-wait: 60000
+      # 配置检测间隔
+      time-between-eviction-runs-millis: 60000
+      # 配置连接最小生存时间
+      min-evictable-idle-time-millis: 300000
+      # 配置检测连接是否有效
+      validation-query: SELECT 1
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      # 打开PSCache
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      # 配置监控统计
+      filter:
+        stat:
+          enabled: true
+          slow-sql-millis: 1000
+          log-slow-sql: true
+        wall:
+          enabled: true
+
+  # ==================== RabbitMQ 配置 ====================
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
+    # 消息确认模式
+    publisher-confirm-type: correlated
+    publisher-returns: true
+    listener:
+      simple:
+        acknowledge-mode: manual
+        prefetch: 1
+        retry:
+          enabled: true
+          initial-interval: 1000ms
+          max-attempts: 3
+          max-interval: 10000ms
+          multiplier: 2
+
+  # ==================== 文件上传配置 ====================
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 20MB
+
+  # ==================== Jackson 配置 ====================
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
+    serialization:
+      write-dates-as-timestamps: false
+    default-property-inclusion: non_null
+
+# ==================== MyBatis-Plus 配置 ====================
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  type-aliases-package: com.nursing.entity
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+      table-underline: true
+    banner: false
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+
+# ==================== JWT 配置 ====================
+jwt:
+  secret: ${JWT_SECRET:NursingServiceAppSecretKey2024VeryLongSecretKeyForHS512Algorithm}
+  expiration: 86400000  # 24小时 (毫秒)
+  refresh-expiration: 604800000  # 7天 (毫秒)
+  header: Authorization
+  prefix: "Bearer "
+
+# ==================== 安全配置 ====================
+security:
+  # AES加密密钥 (32字节，用于加密敏感数据如身份证号)
+  aes:
+    secret-key: ${AES_SECRET_KEY:NursingServiceAES256SecretKey32B}
+  # XSS防护
+  xss:
+    enabled: true
+    exclude-paths: /uploads/**,/swagger-ui/**
+
+# ==================== 支付宝配置 ====================
+alipay:
+  # 建议从环境变量注入，确保 app-id/私钥/公钥为同一套沙箱应用
+  gateway-url: ${ALIPAY_GATEWAY_URL:https://openapi-sandbox.dl.alipaydev.com/gateway.do}
+  app-id: ${ALIPAY_APP_ID:9021000158679392}
+  private-key: ${ALIPAY_PRIVATE_KEY:MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCQ93Vmt8ZbvwTPNUDyvaNoTSuevoueCgMU9wULDK2YKInvgwaOchS0BjCg12GYQ4sJ0XAHYh5NZyud+IlQc4i0H5PsvuSqnNz6uohG8rFcQQRkrJpFPrKUK5gi5mqbg/Gg1vy/VcqwlPE0Uo9DCPCbFZRjdeP+MG8O0qHDP1HGhcc19GS0TpuUZBBB07pniWONKmO7Jkgq+xUjMl6UJP7+EcMSMQSJrFrU/9oSSdWRF+uXxWLc29d3V4muam8smwG4UIs0nU4twQx3uomxJaNMCbsUdnxmPUhwwNRSHxIE+GL5a9SSsreODS1LhMyyULK92YJy+oq0+/fo2v8xOScjAgMBAAECggEADllgNo2kRbqPqE72IdDhltZkpe7odPk6ut2Ek0Zq/G+uz5VhlcH3CKbAM3t+PosY/RzNAP4WT8URjS5nsR3ufx3ND5cJnVWvjeXezV8CbUZGQAzRrF77YC08ft/d14zk4u3E0M+WI4pqoao2YgVFg6RMLtghfCyhIY950ZC38HVxNJWdEjJgUmySnx/aBH2Bqi65PQgPd7MoUpNZAO1UdzX3515DSe1RuSShEcohYNknodUQwdwfxCb7OBwD8WYeXnm9juMqLEfx+7bXFJjGoOPf+wHn8I0GePHUQa958Cn/hJYiPIeJKHNOxiLRK3RDLe+LSWh+Z2tdfuOG1iQxAQKBgQDQTg67+8Rkc2LX2eyBTEbP1k53+8AttxEROwTeksAnugQuMVSS6mdCiHe1ijyT71fX7ccOvJGA4F0t16toQ4aCM0OfzDb6DD/57GPOm9YTc91WvN0qKLKxfxR2knaI1EhugGgCoFVTJdj5ZumX4byqUtCeWePQCU1dFIpOjppDgQKBgQCyKMhFtt1iT1bQoPLmD8uCZu4Y0x5q98bQGhKaPORK6YGtxD5Ts4e5IlTU6r4Bx9nd9GTpGpzAvFwifqeBMQ8j5sIENKJt4grKLnzwigKZXkpFXjGc92Bm9SJasI3psVdK/kHxVWNI3K6R/vvrXMZxObdZvZ72+W8ws62O/GYsowKBgAllO+zmsjkFq1OpFK3QTvFY7TkkNcraEv7/9nxDij9AeKfMuc/Wmsm5dgzOK2VQylmG9A+KGdYCSLGkpKqTQSHmRgqTH3evzcLsEqRjCwjdlQIwipk4NLck0Dt457fMO2ggipBzwuV5M4wsRCUBnYzhJ1+9FjVv9flYz9QzQmoBAoGBAKQcPwdAwEM71DuP1s+ngw5W5EJHzwA3x5KQQcyEBMMgv4yidctCV+Zown3y0h3vyzfSVVYIZpZ/q9s2kfPGjizC9rtLBMh1bPz6v6oPZv+BxKaLcuYlVU7hxciGU+MNsdxpw7Kbtj460i+4ErSmnEFWKhfnPNRBxnO1P020ICZDAoGAbcl6f9DpgxK6bjVkIMX4D1L1ePs8Xi6D212qOwmVrfDO9Ldci0ODcLFC3/eb0l9/M7QkSgVHNShvuMc+VPyzCr8XB2tILIPh9xRytp9mIu2Gb7OWgs17wrYHW6sAJtN+Ab5Q5+cBJPHGTlTid0SlFSWLqb1whpSS9n6bwiaK5+A=}
+  alipay-public-key: ${ALIPAY_PUBLIC_KEY:MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAi0nRsC+tNcfadjTjdKmDR4do0B61GK+jrOFDHKILH2izHeKvXxWViBhbRFr7mhxUeOVQxgq0PlDjw/60Xvi6kfrbBX+/n7McKunpjNrUp8BDwSmHekna47FGCZiJpiObOCN5FZ74gAaS8wfEvSH6/pVv1Hte+yX2Olj1Cy4o2o8EVSeJ1qT45mlUZQR1JybggUNq9fAJ2RqmeJWTFDX4nbrevXop2l6qaOrLFUoreOzv9MJEls9udX7oo1RcbqJASwq7adVUucHZBWZQp00Sl/a2KbATwAkLgBEiJTZ/yAuFGZtVypp6CLs++rKi/DJlfJAT2iSlfyRedUdL23GK6QIDAQAB}
+  # 异步通知地址（不能使用 localhost 给外部回调）
+  notify-url: ${ALIPAY_NOTIFY_URL:http://192.168.1.217:8081/api/v1/payment/notify}
+  # 同步返回地址
+  return-url: ${ALIPAY_RETURN_URL:http://192.168.1.217:8081/api/v1/payment/return}
+  charset: utf-8
+  sign-type: RSA2
+  format: json
+
+# ==================== 文件存储配置 ====================
+file:
+  upload:
+    # 上传文件存储路径（必须为 T:/static/uploads）
+    path: ${FILE_UPLOAD_PATH:T:/static/uploads}
+    # 访问URL前缀
+    url-prefix: /uploads/
+    # 允许的文件类型
+    allowed-types: jpg,jpeg,png,gif,webp
+    # 图片压缩配置
+    compress:
+      enabled: true
+      max-width: 1920
+      max-height: 1080
+      quality: 0.85
+
+# ==================== 阿里云服务配置 (从sys_config表动态加载) ====================
+# 以下为默认配置，实际值从数据库 sys_config 表加载
+aliyun:
+  # 短信服务 SMS
+  sms:
+    access-key-id: ${ALIYUN_SMS_ACCESS_KEY_ID:}
+    access-key-secret: ${ALIYUN_SMS_ACCESS_KEY_SECRET:}
+    sign-name: ${ALIYUN_SMS_SIGN_NAME:}
+    template-code: ${ALIYUN_SMS_TEMPLATE_CODE:}
+    endpoint: dysmsapi.aliyuncs.com
+  # 移动推送 Push
+  push:
+    access-key-id: ${ALIYUN_PUSH_ACCESS_KEY_ID:}
+    access-key-secret: ${ALIYUN_PUSH_ACCESS_KEY_SECRET:}
+    app-key: ${ALIYUN_PUSH_APP_KEY:}
+    region-id: cn-hangzhou
+
+# ==================== 高德地图 API 配置 ====================
+amap:
+  api-key: ${AMAP_API_KEY:27099005ec372959e5e03ad1faa54fa1}
+  base-url: https://restapi.amap.com/v3
+
+# ==================== 业务配置 ====================
+nursing:
+  # 平台费率 (从 sys_config 加载)
+  platform-fee-rate: 0.20
+  # 订单取消时间窗口 (分钟)
+  order-cancel-window: 30
+  # 护士位置上报间隔 (分钟)
+  nurse-location-interval: 5
+  # 订单匹配半径 (公里)
+  order-match-radius: 10
+  # 推送配置
+  push:
+    # 默认推送半径（公里）
+    default-radius-km: 10
+    # 是否启用异步推送（RabbitMQ）
+    async-enabled: true
+
+app:
+  sms:
+    # 是否强制使用固定验证码（true=始终用 fixed-code，适用于纯测试/演示）
+    # 默认 false：由系统自动判断阿里云短信是否配置，未配置时自动回退 123456
+    fixed-code-enabled: ${SMS_FIXED_CODE_ENABLED:false}
+    fixed-code: ${SMS_FIXED_CODE:123456}
+  push:
+    # 默认 false：保持降级策略，仅写站内通知，不发送真实阿里云推送
+    enabled: ${PUSH_ENABLED:false}
+
+# ==================== Spring Actuator 监控配置 ====================
+management:
+  endpoints:
+    web:
+      exposure:
+        # 暴露的端点（生产环境应限制）
+        include: health,info,metrics,loggers,env,beans,mappings,nursing-stats
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
+      status:
+        http-mapping:
+          DOWN: 200
+    loggers:
+      access: read-only
+    metrics:
+      access: read-only
+  health:
+    # 健康检查组件（禁用Redis）
+    db:
+      enabled: true
+    diskspace:
+      enabled: true
+  info:
+    env:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  prometheus:
+    metrics:
+      export:
+        enabled: false
+
+# ==================== 日志配置 ====================
+logging:
+  level:
+    root: INFO
+    '[com.nursing]': DEBUG
+    '[com.baomidou.mybatisplus]': DEBUG
+    '[org.springframework.security]': INFO
+    '[org.springframework.amqp]': INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n"
+  file:
+    name: logs/nursing-service.log
+    max-size: 10MB
+    max-history: 30
+
+# ==================== SpringDoc OpenAPI 配置 ====================
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  # info 配置已在 OpenApiConfig 类中通过注解配置
+
+# ==================== CORS 跨域配置 ====================
+cors:
+  allowed-origins:
+    - http://localhost:5173
+    - http://localhost:3000
+    - http://127.0.0.1:5173
+  allowed-methods:
+    - GET
+    - POST
+    - PUT
+    - DELETE
+    - OPTIONS
+  allowed-headers:
+    - "*"
+  allow-credentials: true
+  max-age: 3600

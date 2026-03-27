@@ -1,0 +1,24 @@
+@startuml
+!theme plain
+skinparam dpi 180
+
+title 图9 QA 全量门禁时序图
+
+actor QA
+participant "run_full_gate.ps1" as Gate
+participant "Maven" as Mvn
+participant "Vitest" as Vitest
+participant "Flutter Test" as FTest
+
+QA -> Gate : 执行一键门禁
+Gate -> Mvn : mvn test
+Mvn --> Gate : 回归+压测+故障注入结果
+Gate -> Vitest : npm run test -- --run
+Vitest --> Gate : 前端测试结果
+Gate -> Vitest : npm run build
+Vitest --> Gate : 构建可通过
+Gate -> FTest : flutter test
+FTest --> Gate : 移动端测试结果
+Gate --> QA : 汇总 PASS/FAIL
+
+@enduml

@@ -1,0 +1,55 @@
+@startuml
+!theme plain
+skinparam dpi 180
+skinparam shadowing false
+
+title 图3 管理后台模块类图（逻辑视图）
+
+package "Presentation" {
+  class MainLayoutVue
+  class LoginView
+  class OrdersView
+  class NursesAuditView
+}
+
+package "Routing" {
+  class RouterIndex {
+    +beforeEach()
+    +routes
+  }
+}
+
+package "State" {
+  class UserStore {
+    +login(form)
+    +logout()
+    +checkToken()
+    +isAdmin
+  }
+  class AppStore {
+    +toggleSidebar()
+    +setTheme(theme)
+  }
+}
+
+package "Data Access" {
+  class Request {
+    +interceptors.request
+    +interceptors.response
+  }
+  class AuthApi
+  class OrderApi
+  class NurseApi
+}
+
+RouterIndex --> UserStore : 权限守卫
+MainLayoutVue --> AppStore : UI状态
+LoginView --> UserStore : 登录流程
+OrdersView --> OrderApi : 查询/导出
+NursesAuditView --> NurseApi : 审核/启停接单
+AuthApi --> Request
+OrderApi --> Request
+NurseApi --> Request
+Request --> UserStore : 401触发登出
+
+@enduml

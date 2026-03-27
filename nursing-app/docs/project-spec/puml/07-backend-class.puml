@@ -1,0 +1,58 @@
+@startuml
+!theme plain
+skinparam dpi 180
+
+title 图7 后端领域模块类图（逻辑视图）
+
+package "Controller" {
+  class AuthController
+  class OrderController
+  class NurseOrderController
+  class AdminOrderController
+  class PaymentController
+}
+
+package "Service" {
+  class AuthService
+  class OrderService
+  class AlipayService
+  class DistributedLockService
+}
+
+package "Security" {
+  class SecurityConfig
+  class JwtAuthenticationFilter
+  class XssFilter
+  class SecurityHeadersFilter
+}
+
+package "Persistence" {
+  class OrdersMapper
+  class UserAddressMapper
+  class NotificationMapper
+  class RefundRecordMapper
+  class Orders
+  class RefundRecord
+  class NurseProfile
+}
+
+package "Scheduler" {
+  class OrderScheduledTask
+  class PaymentTimeoutScheduledTask
+}
+
+AuthController --> AuthService
+OrderController --> OrderService
+NurseOrderController --> OrderService
+PaymentController --> AlipayService
+OrderService --> OrdersMapper
+OrderService --> UserAddressMapper
+OrderService --> NotificationMapper
+OrderService --> RefundRecordMapper
+SecurityConfig --> JwtAuthenticationFilter
+JwtAuthenticationFilter --> Orders
+OrderScheduledTask --> OrdersMapper
+OrderScheduledTask --> NurseProfile
+OrderScheduledTask --> DistributedLockService
+
+@enduml

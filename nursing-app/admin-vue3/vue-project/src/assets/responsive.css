@@ -1,0 +1,450 @@
+/**
+ * 响应式设计全局样式
+ * 基于VueUse断点系统，确保移动端良好体验
+ */
+
+/* ==================== 全局响应式基础 ==================== */
+
+/* 移动端容器内边距 */
+@media (max-width: 768px) {
+  .el-card__body {
+    padding: 12px !important;
+  }
+  
+  .el-card__header {
+    padding: 12px !important;
+  }
+  
+  .el-dialog__body {
+    padding: 15px !important;
+  }
+}
+
+/* 小屏幕移动端 */
+@media (max-width: 640px) {
+  .el-card__body {
+    padding: 8px !important;
+  }
+  
+  .el-card__header {
+    padding: 8px !important;
+  }
+}
+
+/* ==================== 统计卡片响应式 ==================== */
+
+.stats-row {
+  margin-bottom: 16px;
+}
+
+@media (max-width: 768px) {
+  .stats-row {
+    margin-bottom: 12px;
+  }
+  
+  .stat-card .el-card__body {
+    padding: 10px !important;
+  }
+  
+  .stat-icon {
+    width: 40px !important;
+    height: 40px !important;
+  }
+  
+  .stat-icon .el-icon {
+    font-size: 20px !important;
+  }
+  
+  .stat-value {
+    font-size: 18px !important;
+  }
+  
+  .stat-label {
+    font-size: 12px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .stat-card .el-card__body {
+    padding: 8px !important;
+  }
+  
+  .stat-content {
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+  }
+  
+  .stat-info {
+    margin-left: 0 !important;
+    margin-top: 6px !important;
+  }
+}
+
+/* ==================== 表单响应式 ==================== */
+
+.search-form {
+  margin-bottom: 16px;
+}
+
+@media (max-width: 768px) {
+  .search-form .el-form-item {
+    margin-bottom: 12px !important;
+    width: 100% !important;
+  }
+  
+  .search-form .el-form-item__content {
+    width: 100% !important;
+  }
+  
+  .search-form .el-input,
+  .search-form .el-select,
+  .search-form .el-date-picker {
+    width: 100% !important;
+  }
+  
+  .search-form .el-button {
+    width: 48% !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .search-form .el-button {
+    width: 100% !important;
+    margin-left: 0 !important;
+  }
+}
+
+/* ==================== 表格响应式 ==================== */
+
+@media (max-width: 768px) {
+  /* 表格字体缩小 */
+  .el-table {
+    font-size: 13px !important;
+  }
+  
+  .el-table th,
+  .el-table td {
+    padding: 8px 0 !important;
+  }
+  
+  /* 隐藏部分不重要列 */
+  .el-table .hidden-mobile {
+    display: none !important;
+  }
+  
+  /* 表格操作按钮 */
+  .el-table .el-button {
+    padding: 5px 8px !important;
+    font-size: 12px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .el-table {
+    font-size: 12px !important;
+  }
+  
+  .el-table th,
+  .el-table td {
+    padding: 6px 0 !important;
+  }
+}
+
+/* ==================== 分页响应式 ==================== */
+
+.pagination-container {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media (max-width: 768px) {
+  .pagination-container {
+    justify-content: center;
+    margin-top: 12px;
+  }
+  
+  .el-pagination {
+    padding: 0 !important;
+  }
+  
+  .el-pagination .btn-prev,
+  .el-pagination .btn-next,
+  .el-pagination .el-pager li {
+    min-width: 28px !important;
+    height: 28px !important;
+    line-height: 28px !important;
+    font-size: 12px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .el-pagination .el-pagination__total,
+  .el-pagination .el-pagination__sizes {
+    display: none !important;
+  }
+}
+
+/* ==================== 弹窗响应式 ==================== */
+
+@media (max-width: 768px) {
+  .el-dialog {
+    margin: 10px auto !important;
+  }
+  
+  .el-dialog__header {
+    padding: 15px !important;
+  }
+  
+  .el-dialog__footer {
+    padding: 10px 15px !important;
+  }
+  
+  .el-descriptions {
+    font-size: 13px !important;
+  }
+  
+  .el-descriptions__label,
+  .el-descriptions__content {
+    padding: 8px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .el-dialog {
+    width: 95% !important;
+    margin: 5px auto !important;
+  }
+  
+  .el-dialog__title {
+    font-size: 16px !important;
+  }
+  
+  .dialog-footer .el-button {
+    width: 48% !important;
+  }
+}
+
+/* ==================== 快速筛选标签响应式 ==================== */
+
+.quick-filters {
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #ebeef5;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .quick-filters {
+    gap: 6px;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+  }
+  
+  .filter-tag {
+    font-size: 12px !important;
+    padding: 4px 8px !important;
+  }
+}
+
+/* ==================== 详情描述列表响应式 ==================== */
+
+@media (max-width: 768px) {
+  .detail-descriptions .el-descriptions__body {
+    display: block !important;
+  }
+  
+  .detail-descriptions .el-descriptions__table {
+    display: block !important;
+  }
+  
+  .detail-descriptions .el-descriptions__row {
+    display: block !important;
+  }
+  
+  .detail-descriptions .el-descriptions__cell {
+    display: block !important;
+    width: 100% !important;
+    border-right: none !important;
+  }
+}
+
+/* ==================== 头部操作区响应式 ==================== */
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .card-header .title {
+    font-size: 15px !important;
+  }
+  
+  .header-actions {
+    width: 100%;
+    display: flex;
+    gap: 8px;
+  }
+  
+  .header-actions .el-button {
+    flex: 1;
+    font-size: 13px !important;
+  }
+}
+
+/* ==================== 面包屑响应式 ==================== */
+
+@media (max-width: 640px) {
+  .el-breadcrumb {
+    display: none;
+  }
+}
+
+/* ==================== 用户信息响应式 ==================== */
+
+@media (max-width: 768px) {
+  .user-info .username {
+    display: none;
+  }
+  
+  .user-info .el-icon:not(.el-avatar .el-icon) {
+    display: none;
+  }
+}
+
+/* ==================== 地图视图响应式 ==================== */
+
+.map-view-container {
+  display: flex;
+  gap: 16px;
+}
+
+@media (max-width: 1200px) {
+  .map-view-container {
+    flex-direction: column;
+  }
+  
+  .sidebar-section {
+    width: 100% !important;
+    max-height: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  .map-box {
+    min-height: 400px !important;
+  }
+  
+  .map-stats {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .stat-item {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ==================== 滚动条优化 ==================== */
+
+/* 移动端隐藏滚动条样式 */
+@media (max-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 2px;
+  }
+}
+
+/* ==================== 工具类 ==================== */
+
+/* 仅桌面显示 */
+.desktop-only {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none !important;
+  }
+}
+
+/* 仅移动端显示 */
+.mobile-only {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-only {
+    display: block !important;
+  }
+}
+
+/* 移动端隐藏 */
+.hidden-mobile {
+  display: table-cell;
+}
+
+@media (max-width: 768px) {
+  .hidden-mobile {
+    display: none !important;
+  }
+}
+
+/* 移动端全宽 */
+@media (max-width: 768px) {
+  .mobile-full-width {
+    width: 100% !important;
+  }
+}
+
+/* ==================== 触摸优化 ==================== */
+
+@media (max-width: 768px) {
+  /* 增大点击区域 */
+  .el-button,
+  .el-link,
+  .filter-tag,
+  .stat-card {
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* 防止选中文本 */
+  .stat-card,
+  .el-table__row {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+}
+
+/* ==================== 动画优化 ==================== */
+
+/* 移动端减少动画 */
+@media (max-width: 768px) and (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

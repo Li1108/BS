@@ -1,0 +1,48 @@
+@startuml
+!theme plain
+skinparam dpi 180
+
+title 图5 Flutter 客户端模块类图（逻辑视图）
+
+package "App Shell" {
+  class NursingApp
+  class AppRouter
+}
+
+package "State" {
+  class AuthProvider
+  class AppSettingsProvider
+}
+
+package "Network" {
+  class HttpClient
+  class ApiConfig
+  class AuthRepository
+}
+
+package "Core Services" {
+  class StorageService
+  class PushService
+  class AliyunPushService
+}
+
+package "Feature" {
+  class LoginPage
+  class UserHomePage
+  class NurseTaskPage
+  class OrderListPage
+}
+
+NursingApp --> AppRouter
+NursingApp --> AppSettingsProvider
+LoginPage --> AuthProvider
+AuthProvider --> AuthRepository
+AuthRepository --> HttpClient
+HttpClient --> StorageService : token
+PushService --> StorageService : deviceId
+AliyunPushService --> StorageService
+AppRouter --> UserHomePage
+AppRouter --> NurseTaskPage
+AppRouter --> OrderListPage
+
+@enduml

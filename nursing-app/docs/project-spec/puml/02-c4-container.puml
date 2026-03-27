@@ -1,0 +1,40 @@
+@startuml
+!theme plain
+skinparam dpi 180
+skinparam shadowing false
+skinparam packageStyle rectangle
+
+title 图2 C4-Container 平台容器图
+
+rectangle "Nursing-App System" {
+  rectangle "Container A\nAdmin Web\nVue3 + Vite + Pinia" as C1
+  rectangle "Container B\nMobile App\nFlutter + Riverpod" as C2
+  rectangle "Container C\nBackend API\nSpring Boot + Security + MyBatis-Plus" as C3
+  database "Container D\nMySQL" as C4
+  queue "Container E\nRabbitMQ" as C5
+}
+
+cloud "External\nAliyun SMS" as E1
+cloud "External\nAliyun Push" as E2
+cloud "External\nAlipay" as E3
+cloud "External\nAmap" as E4
+
+C1 --> C3 : /api/v1/**
+C2 --> C3 : /api/v1/**
+C3 --> C4 : SQL + 事务
+C3 --> C5 : 事件投递/消费
+C3 --> E1 : 短信验证码
+C3 --> E2 : 消息推送
+C3 --> E3 : 支付与退款
+C3 --> E4 : 地理服务
+
+note right of C3
+分层：
+- Controller/API
+- Service/领域规则
+- Mapper/数据访问
+- Task/定时任务
+- Security/过滤链
+end note
+
+@enduml

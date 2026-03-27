@@ -1,0 +1,202 @@
+openapi: 3.0.3
+info:
+  title: Nursing Service API (Incremental Update)
+  version: 1.0.0
+  description: |
+    本文件为本次改造涉及接口的增量说明（管理员登录、订单管理导出/DTO、护士拒单规则）。
+servers:
+  - url: http://localhost:8081/api/v1
+paths:
+  /admin/auth/login:
+    post:
+      summary: 管理员账号密码登录
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [phone, password]
+              properties:
+                phone:
+                  type: string
+                  example: "18800000000"
+                password:
+                  type: string
+                  example: "admin123"
+      responses:
+        "200":
+          description: 登录结果
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResultAuthLogin"
+  /admin/order/list:
+    get:
+      summary: 管理端订单分页列表
+      parameters:
+        - name: orderNo
+          in: query
+          schema:
+            type: string
+        - name: userPhone
+          in: query
+          schema:
+            type: string
+        - name: nursePhone
+          in: query
+          schema:
+            type: string
+        - name: orderStatus
+          in: query
+          schema:
+            type: integer
+        - name: payStatus
+          in: query
+          schema:
+            type: integer
+        - name: pageNo
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: pageSize
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        "200":
+          description: 订单分页
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResultOrderPage"
+  /admin/order/export:
+    get:
+      summary: 订单导出（Excel）
+      parameters:
+        - name: ids
+          in: query
+          schema:
+            type: string
+            description: 逗号分隔订单ID
+        - name: orderNo
+          in: query
+          schema:
+            type: string
+        - name: userPhone
+          in: query
+          schema:
+            type: string
+        - name: nursePhone
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Excel 文件流
+          content:
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema:
+                type: string
+                format: binary
+  /nurse/order/reject/{orderNo}:
+    post:
+      summary: 护士拒单（3分钟窗口 + 当日阈值）
+      parameters:
+        - name: orderNo
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 拒单结果
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResultVoid"
+
+components:
+  schemas:
+    ResultVoid:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 0
+        message:
+          type: string
+          example: success
+        data:
+          nullable: true
+    ResultAuthLogin:
+      allOf:
+        - $ref: "#/components/schemas/ResultVoid"
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                token:
+                  type: string
+                userId:
+                  type: integer
+                  format: int64
+                role:
+                  type: string
+                  example: ADMIN_SUPER
+    ResultOrderPage:
+      allOf:
+        - $ref: "#/components/schemas/ResultVoid"
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                records:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/AdminOrderVO"
+                total:
+                  type: integer
+                  format: int64
+                size:
+                  type: integer
+                current:
+                  type: integer
+    AdminOrderVO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        orderNo:
+          type: string
+        serviceName:
+          type: string
+        contactName:
+          type: string
+        contactPhone:
+          type: string
+        address:
+          type: string
+        status:
+          type: integer
+        payStatus:
+          type: integer
+        refundStatus:
+          type: integer
+        totalAmount:
+          type: number
+        platformFee:
+          type: number
+        nurseIncome:
+          type: number
+        appointmentTime:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
